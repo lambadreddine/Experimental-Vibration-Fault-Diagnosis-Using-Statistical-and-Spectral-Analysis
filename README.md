@@ -1,0 +1,1 @@
+# Experimental-Vibration-Fault-Diagnosis-Using-Statistical-and-Spectral-Analysis
