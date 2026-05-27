@@ -1,0 +1,89 @@
+clear all      % Removes all variables from MATLAB workspace (clears memory)
+close all      % Closes all open figure windows
+clc            % Clears the command window screen
+
+%% ===================== Chargement du signal DEFAUT (seulement Axial) =====================
+% Section divider - creates a code section for loading the fault signal (axial direction only)
+
+load defaut_roulement_10Hz_gvd_VHA.txt;   % Loads text file containing vibration data from a bearing fault at 10Hz rotation speed
+signal_A_D = defaut_roulement_10Hz_gvd_VHA(:,8);  % Extracts column 16 (axial direction) and assigns to variable 'signal_A_D'
+
+%% ===================== Base de temps =====================
+% Section divider - creates time base parameters
+
+t = defaut_roulement_10Hz_gvd_VHA(:,1);   % Extracts column 1 (time vector) from the loaded data
+dt = t(3) - t(2);    % Calculates sampling time interval using 3rd minus 2nd sample (assumes uniform sampling)
+Fe = 1/dt;           % Calculates sampling frequency in Hz (samples per second) - French: "fréquence d'échantillonnage"
+
+%% ===================== Présentation temporelle =====================
+% Section divider - time domain plot (French: "présentation temporelle")
+
+figure(1)            % Creates figure window number 1
+plot(t,signal_A_D)   % Plots the axial fault signal (amplitude) versus time
+title('Signal temporel - Direction Axiale (Défaut de roulement)')  % Adds title (French: time signal - axial direction, bearing fault)
+xlabel('Temps (s)')  % Labels x-axis as "Time (seconds)" in French
+ylabel('Amplitude (g)')  % Labels y-axis as "Amplitude (g)" - units are in g (gravity)
+
+%% ===================== Indicateurs statistiques =====================
+% Section divider - calculates statistical indicators in time domain
+
+peak_A_D = max(abs(signal_A_D));   % Peak value = maximum absolute amplitude of the signal
+rms_A_D  = rms(signal_A_D);        % RMS = Root Mean Square = overall vibration level (energy)
+kur_A_D  = kurtosis(signal_A_D);   % Kurtosis = measures peakedness of distribution (normal=3, higher indicates bearing faults/spikes)
+skew_A_D = skewness(signal_A_D);   % Skewness = measures asymmetry of distribution (0 = symmetric, positive = more positive peaks)
+crest_A_D = peak_A_D / rms_A_D;    % Crest Factor = peak divided by RMS (indicates impulsiveness; >3-4 suggests bearing damage)
+
+%% ===================== FFT =====================
+% Section divider - performs Fast Fourier Transform to convert signal to frequency domain
+
+N = length(signal_A_D);            % Calculates number of samples in the axial fault signal
+Fr = (0:N/2-1)*Fe/N;               % Creates frequency vector for single-sided spectrum (0 to Nyquist frequency)
+% (0:N/2-1) = indices from 0 to Nyquist index, *Fe/N = converts indices to actual frequencies in Hz
+
+signal_fft_D = abs(fft(signal_A_D))*2/N;   % Calculates FFT magnitude spectrum
+% fft(signal_A_D) = computes Fast Fourier Transform (complex numbers)
+% abs(...) = takes magnitude (removes phase information)
+% *2/N = normalizes amplitude; 2 accounts for using only positive frequencies, N normalizes for signal length
+
+figure(2)                          % Creates figure window number 2
+plot(Fr,signal_fft_D(1:N/2))       % Plots amplitude vs. frequency (first half of FFT only)
+title('Spectre FFT - Direction Axiale (Défaut de roulement)')  % Title (French: FFT spectrum - axial direction, bearing fault)
+xlabel('Fréquence (Hz)')           % Labels x-axis as "Frequency (Hz)" in French
+ylabel('Amplitude (g)')            % Labels y-axis as "Amplitude (g)"
+xlim([0 200])                      % Zooms frequency axis to show 0-200 Hz range
+
+%% ===================== ENVELOPPE (Hilbert) =====================
+% Section divider - calculates the envelope using Hilbert transform for demodulation
+
+TH_D = abs(hilbert(signal_A_D));   % Hilbert transform to get analytical signal, then absolute value gives the envelope
+% hilbert(signal) = creates complex analytical signal (real = original, imag = 90° phase shifted)
+% abs(...) = magnitude of complex signal = envelope (detects amplitude modulations)
+
+figure(3)                          % Creates figure window number 3
+plot(t,TH_D)                       % Plots envelope amplitude vs. time
+title('Enveloppe du signal (Hilbert) - Direction Axiale')  % Title (French: Signal envelope - axial direction)
+xlabel('Temps (s)')                % Labels x-axis as "Time (seconds)"
+ylabel('Amplitude')                % Labels y-axis as "Amplitude"
+
+%% ===================== FFT DE L'ENVELOPPE =====================
+% Section divider - performs FFT on the envelope to extract fault frequencies
+
+fft_env_D = abs(fft(TH_D))*2/N;    % Calculates FFT of the envelope spectrum (same normalization as before)
+% This reveals the modulation frequencies caused by bearing defects (BPFI, BPFO, BSF, FTF)
+
+figure(4)                          % Creates figure window number 4
+plot(Fr,fft_env_D(1:N/2))          % Plots envelope spectrum amplitude vs. frequency
+title('Spectre d''enveloppe - Direction Axiale')  % Title (French: Envelope spectrum - axial direction)
+xlabel('Fréquence (Hz)')           % Labels x-axis as "Frequency (Hz)"
+ylabel('Amplitude')                % Labels y-axis as "Amplitude"
+xlim([0 200])                      % Zooms frequency axis to show 0-200 Hz range
+
+%% ===================== Affichage des indicateurs =====================
+% Section divider - displays all calculated indicators in the command window
+
+disp('===== INDICATEURS DEFAUT DE ROULEMENT (Axial) =====')  % Displays header text (French: bearing fault indicators - axial)
+disp(['Peak = ', num2str(peak_A_D)])      % Displays Peak value converted to string
+disp(['RMS = ', num2str(rms_A_D)])        % Displays RMS value
+disp(['Kurtosis = ', num2str(kur_A_D)])   % Displays Kurtosis value
+disp(['Skewness = ', num2str(skew_A_D)])  % Displays Skewness value
+disp(['Crest Factor = ', num2str(crest_A_D)])  % Displays Crest Factor value
