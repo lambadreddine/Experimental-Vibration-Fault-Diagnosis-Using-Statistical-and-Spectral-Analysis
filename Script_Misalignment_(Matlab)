@@ -1,0 +1,51 @@
+clear all   % Removes all variables from MATLAB workspace (clears memory)
+close all   % Closes all open figure windows
+clc         % Clears the command window screen
+format short g  % Sets numeric display to short fixed/decimal format (5 digits)
+
+%%  % Section divider - creates a code section in MATLAB Editor
+
+% LOAD DATA FROM TEXT FILE
+load angular_misalignment_25Hz_gvd_VHA.txt;  % Loads text file containing vibration data (columns of numbers)
+data3=angular_misalignment_25Hz_gvd_VHA;     % Assigns loaded data to variable 'data3' (matrix)
+t=data3(:,1);        % Extracts column 1 as time vector (all rows, column 1)
+signal=data3(:,16);  % Extracts column 16 as vibration signal (all rows, column 16)
+
+% SIGNAL PARAMETERS
+N=length(signal)     % Calculates number of samples in the signal (displays result)
+dt=t(3)-t(2)         % Calculates sampling time interval using 3rd minus 2nd sample (assumes uniform sampling)
+Fe=1/dt              % Calculates sampling frequency in Hz (samples per second)
+Ta = N*dt            % Calculates total acquisition time (signal duration in seconds)
+
+% TIME DOMAIN PLOT
+figure (1); plot(t,signal)  % Creates Figure 1 and plots signal amplitude vs. time
+xlim([0  1]);        % Zooms x-axis to show only the first 1 second of data
+
+% CALCULATE TIME-DOMAIN INDICATORS (French: "Calculer les indicateurs temporels")
+rms=rms(signal)      % RMS = Root Mean Square = overall vibration level (displays result)
+peak= max(signal)    % Peak value = maximum absolute amplitude (displays result)
+FC=peak/rms          % Crest Factor = peak divided by RMS (indicates impulsiveness; >3-4 suggests faults)
+kur=kurtosis(signal) % Kurtosis = measures peakedness of distribution (normal=3, higher=faults/spikes)
+
+% %  % Section separator
+
+%% PRESENTATION FREQUENTIELLE DE SIGNAL FFT OU SPECTRE (French: "Frequency presentation of signal - FFT or spectrum")
+N=length(signal);    % Recalculates number of samples (same as line 10, semicolon hides output)
+
+% FFT CALCULATION
+signal_frequentiel=abs(fft(signal))*(2/N);  
+% fft(signal) = computes Fast Fourier Transform (complex numbers)
+% abs(...) = takes magnitude (removes phase information)
+% *(2/N) = normalizes amplitude to match original signal; the 2 accounts for using only positive frequencies
+
+% CREATE FREQUENCY VECTOR
+Fr=(1:N/2)*Fe/N;     % Frequency axis in Hz for single-sided spectrum
+% (1:N/2) = indices from 1 to Nyquist frequency index
+% *Fe/N = converts indices to actual frequencies (formula: f = k × Fe / N)
+
+% PLOT SPECTRUM
+figure(2); plot(Fr, signal_frequentiel(1:length(Fr)));  % Creates Figure 2, plots amplitude vs. frequency (first half only)
+title ('Spectre du signal');   % Adds title (French: "Spectrum of the signal")
+xlabel('Fréquence (Hz)');      % Labels x-axis (French: "Frequency (Hz)")
+ylabel('Amplitude (v)');       % Labels y-axis (French: "Amplitude (v)") - units are volts
+xlim([0  200]);                % Zooms frequency axis to show 0-200 Hz range
