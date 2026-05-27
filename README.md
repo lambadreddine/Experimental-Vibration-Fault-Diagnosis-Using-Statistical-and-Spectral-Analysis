@@ -24,8 +24,8 @@ The data utilizing these diagnostic frameworks was acquired from a dedicated lab
 
 
 * **Machinery Test Rig:** An integrated mechanical simulator consisting of an electric motor, a mechanical speed reducer, bearings, and a fluid pump.
-*  * **Speed Regulation:** Driven via a Variable Frequency Drive (VFD) to simulate steady-state operational speeds up to **1500 RPM (25 Hz)**.
-*  * **Fault Injection Methodology:**
+* **Speed Regulation:** Driven via a Variable Frequency Drive (VFD) to simulate steady-state operational speeds up to **1500 RPM (25 Hz)**.
+* **Fault Injection Methodology:**
 * *Angular Misalignment:* Generated deterministically by inducing a precision controlled micro-slip at the electric motor's support base.
 * *Bearing Defects:* Comparative testing performed using an identical baseline control group: a pristine, brand-new bearing vs. an identical element modified with a localized **outer-race defect**.
 * **Sensor & Data Acquisition (DAQ) Hardware:**
