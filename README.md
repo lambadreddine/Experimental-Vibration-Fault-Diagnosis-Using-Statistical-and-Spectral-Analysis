@@ -42,7 +42,8 @@ To map raw time-series measurements into distinct diagnostic trends, a robust an
 ### A. Time-Domain Statistical Metrics
 Scalar time-domain features serve as computationally lightweight "early-warning" alarms to detect the emergence of a structural transition.
 
-* **Root Mean Square (RMS):** Tracks the global energy content of the destructive vibration profile. $$X_{\text{RMS}} = \sqrt{\frac{1}{N} \sum_{n=1}^{N} x_n^2}$$
+* **Root Mean Square (RMS):** Tracks the global energy content of the destructive vibration profile.
+ $$X_{\text{RMS}} = \sqrt{\frac{1}{N} \sum_{n=1}^{N} x_n^2}$$
 * **Kurtosis:** Measures the relative spikiness/tailedness of the signal profile. A healthy sinusoidal baseline yields a value around $3.0$. Micro-shocks from rolling elements drastically increase this metric.
  $$\text{Kurtosis} = \frac{\frac{1}{N}\sum_{n=1}^{N}(x_n - \bar{x})^4}{\left(\frac{1}{N}\sum_{n=1}^{N}(x_n - \bar{x})^2\right)^2}$$
 * **Crest Factor:** Evaluates the ratio of extreme impact peaks to the overall steady energy profile, serving as a primary indicator for localized impact tracking.
@@ -94,4 +95,4 @@ To preserve the readability of this case study, raw visual plots and asset files
 
 > ⚠️ **Data Confidentiality Notice:** *The raw sensor time-series datasets used throughout this research are bound by institutional confidentiality agreements governing the laboratory facilities, university assets, and advisor provisions. To show compliance with intellectual property boundaries while validating engineering competency, this repository contains the core processing scripts, theoretical frameworks, and verified diagnostic figures.*
 
-**
+
