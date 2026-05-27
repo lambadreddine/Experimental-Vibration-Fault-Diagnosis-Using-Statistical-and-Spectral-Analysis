@@ -43,11 +43,14 @@ To map raw time-series measurements into distinct diagnostic trends, a robust an
 Scalar time-domain features serve as computationally lightweight "early-warning" alarms to detect the emergence of a structural transition.
 
 * **Root Mean Square (RMS):** Tracks the global energy content of the destructive vibration profile. $$X_{\text{RMS}} = \sqrt{\frac{1}{N} \sum_{n=1}^{N} x_n^2}$$
-* **Kurtosis:** Measures the relative spikiness/tailedness of the signal profile. A healthy sinusoidal baseline yields a value around $3.0$. Micro-shocks from rolling elements drastically increase this metric. $$\text{Kurtosis} = \frac{\frac{1}{N}\sum_{n=1}^{N}(x_n - \bar{x})^4}{\left(\frac{1}{N}\sum_{n=1}^{N}(x_n - \bar{x})^2\right)^2}$$
-* **Crest Factor:** Evaluates the ratio of extreme impact peaks to the overall steady energy profile, serving as a primary indicator for localized impact tracking. $$\text{Crest Factor} = \frac{x_{\text{peak}}}{X_{\text{RMS}}}$$
+* **Kurtosis:** Measures the relative spikiness/tailedness of the signal profile. A healthy sinusoidal baseline yields a value around $3.0$. Micro-shocks from rolling elements drastically increase this metric.
+ $$\text{Kurtosis} = \frac{\frac{1}{N}\sum_{n=1}^{N}(x_n - \bar{x})^4}{\left(\frac{1}{N}\sum_{n=1}^{N}(x_n - \bar{x})^2\right)^2}$$
+* **Crest Factor:** Evaluates the ratio of extreme impact peaks to the overall steady energy profile, serving as a primary indicator for localized impact tracking.
+ $$\text{Crest Factor} = \frac{x_{\text{peak}}}{X_{\text{RMS}}}$$
 ### B. Spectral & Envelope Transformation
 While time-domain features alert to the *existence* of a defect, frequency-domain transformations reveal the structural *root cause*.
-* **Fast Fourier Transform (FFT):** Converts discrete time series $x_n$ into discrete spectral arrays $X_k$ to expose cyclic operational anomalies. $$X_k = \sum_{n=0}^{N-1} x_n e^{-j \frac{2\pi}{N} kn}$$
+* **Fast Fourier Transform (FFT):** Converts discrete time series $x_n$ into discrete spectral arrays $X_k$ to expose cyclic operational anomalies.
+ $$X_k = \sum_{n=0}^{N-1} x_n e^{-j \frac{2\pi}{N} kn}$$
 * **Hilbert Transform (Envelope Spectrum):** Extracts low-amplitude, high-frequency impact cycles masked by heavy structural noise. By applying an analytical filter $z(t) = x(t) + j\hat{x}(t)$ and mapping its absolute magnitude, high-frequency carrier content is demodulated, exposing the pure Ball Pass Frequency Outer-Race ($\text{BPFO}$) components.
   
  --- 
@@ -87,6 +90,8 @@ To preserve the readability of this case study, raw visual plots and asset files
   * `kurtosis_histogram.jpg` & `crest_factor_histogram.jpg` — Statistical time-domain histograms proving early-stage impulse detection.
   * `envelope_spectrum_10hz.jpg` & `envelope_spectrum_25hz.jpg` — Demodulated amplitude spectrums successfully isolating specific rolling-element defect frequency lines ($BPFO$).
 
-1. ## 🔒 Institutional Data Privacy Notice ##
-2.  **Data Confidentiality Notice:
-** *The raw sensor time-series datasets used throughout this research are bound by institutional confidentiality agreements governing the laboratory facilities, university assets, and advisor provisions. To show compliance with intellectual property boundaries while validating engineering competency, this repository contains the core processing scripts, theoretical frameworks, and verified diagnostic figures.* ***
+## 🔒 Institutional Data Privacy Notice
+
+> ⚠️ **Data Confidentiality Notice:** *The raw sensor time-series datasets used throughout this research are bound by institutional confidentiality agreements governing the laboratory facilities, university assets, and advisor provisions. To show compliance with intellectual property boundaries while validating engineering competency, this repository contains the core processing scripts, theoretical frameworks, and verified diagnostic figures.*
+
+**
